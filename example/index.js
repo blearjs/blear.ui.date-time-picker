@@ -8,7 +8,20 @@
 'use strict';
 
 
-var DatePicker = require('../src/index');
+var DateTimePicker = require('../src/index');
+
+var demo1El = document.getElementById('demo1');
 
 
+var dtp = window.dtp = new DateTimePicker({
+    timeable: true,
+    minutesable: true,
+    secondsable: false
+});
+
+demo1El.onclick = function () {
+    dtp.open(this);
+};
+
+dtp.open(demo1El);
 

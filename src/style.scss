@@ -1,0 +1,147 @@
+.blearui-dateTimePicker {
+  width: 420px;
+  font-size: 14px;
+
+  &-nav {
+    $nav-size: 40px;
+    height: $nav-size;
+    line-height: $nav-size;
+
+    &-inner {
+      width: 160px;
+      text-align: center;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    $nav-arrow-size: 10px;
+
+    &-left,
+    &-right {
+      position: relative;
+      width: $nav-arrow-size * 2;
+      height: $nav-arrow-size * 2;
+      top: ($nav-size - $nav-arrow-size * 2) / 2;
+
+      &:before,
+      &:after {
+        display: block;
+        position: absolute;
+        content: "";
+        border: $nav-arrow-size solid transparent;
+      }
+    }
+
+    &-left {
+      float: left;
+
+      &:before {
+        border-right-color: #444;
+      }
+
+      &:after {
+        border-right-color: #fff;
+        margin-left: 1px;
+      }
+    }
+
+    &-center {
+
+    }
+
+    &-right {
+      float: right;
+
+      &:before {
+        border-left-color: #444;
+      }
+
+      &:after {
+        border-left-color: #fff;
+        margin-left: -1px;
+      }
+    }
+  }
+
+  &-container {
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+      border: 0;
+    }
+
+    th {
+      height: 40px;
+      border-bottom: 1px solid #eee;
+    }
+
+    td {
+      vertical-align: middle;
+      border: 0;
+    }
+  }
+
+  &-td {
+    border: 1px solid #fff;
+    color: #333;
+    text-align: center;
+    line-height: 40px;
+
+    &_prevMonth,
+    &_nextMonth {
+      color: #ccc;
+    }
+
+    &_selected {
+      background: #f2fefb;
+      border-color: #00c0a5;
+      color: #00c0a5;
+    }
+  }
+
+  &-footer {
+    overflow: hidden;
+    padding: 15px;
+    border-top: 1px solid #eee;
+
+    &-item {
+      float: left;
+      overflow: hidden;
+    }
+
+    &_3 &-item {
+      width: percentage(1/3);
+    }
+
+    &_2 &-item {
+      width: percentage(1/2);
+    }
+
+    &_1 &-item {
+      width: percentage(1/1);
+    }
+
+    &-ipt {
+      float: left;
+      width: 70%;
+    }
+
+    &-label {
+      float: left;
+      width: 30%;
+      text-align: center;
+      line-height: 30px;
+    }
+
+    input {
+      border: 1px solid #ccc;
+      display: block;
+      width: 100%;
+      line-height: 28px;
+      padding: 0 4px;
+      text-align: center;
+      border-radius: 4px;
+    }
+  }
+}

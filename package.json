@@ -37,8 +37,8 @@
   "peerDependencies": {
     "blear.utils.calendar": "1.x",
     "blear.utils.object": "1.x",
-    "blear.ui": "1.x",
-    "blear.ui.window": "1.x"
+    "blear.ui.popover": "1.x",
+    "blear.classes.view-model": "1.x"
   },
   "devDependencies": {
     "coolie.js": "^2.0.18"

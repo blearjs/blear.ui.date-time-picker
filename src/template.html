@@ -1,0 +1,49 @@
+<div class="blearui-dateTimePicker">
+    <div class="blearui-dateTimePicker-nav">
+        <div class="blearui-dateTimePicker-nav-inner">
+            <div class="blearui-dateTimePicker-nav-left" @click="onPrev"></div>
+            <div class="blearui-dateTimePicker-nav-right" @click="onNext"></div>
+            <div class="blearui-dateTimePicker-nav-center">{{year}}年{{month + 1}}月</div>
+        </div>
+    </div>
+
+    <div class="blearui-dateTimePicker-container">
+        <table>
+            <thead>
+            <tr>
+                <th @for="head in heads">{{head}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr @for="week in weeks">
+                <td @for="item in week">
+                    <div class="blearui-dateTimePicker-td" @class="
+                    blearui-dateTimePicker-td_prevMonth: item.prevMonth,
+                    blearui-dateTimePicker-td_nextMonth: item.nextMonth,
+                    blearui-dateTimePicker-td_selected: item.id == selected
+                    " @click="onSelect(item)">{{item.date}}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="blearui-dateTimePicker-footer" @if="options.timeable" @class="
+        blearui-dateTimePicker-footer_3: options.minutesable && options.secondsable,
+        blearui-dateTimePicker-footer_2: options.minutesable && !options.secondsable,
+        blearui-dateTimePicker-footer_1: !options.minutesable
+    ">
+        <div class="blearui-dateTimePicker-footer-item">
+            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="hours"></div>
+            <div class="blearui-dateTimePicker-footer-label">时</div>
+        </div>
+        <div class="blearui-dateTimePicker-footer-item" @if="options.minutesable">
+            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="minutes"></div>
+            <div class="blearui-dateTimePicker-footer-label">分</div>
+        </div>
+        <div class="blearui-dateTimePicker-footer-item" @if="options.minutesable && options.secondsable">
+            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="seconds"></div>
+            <div class="blearui-dateTimePicker-footer-label">秒</div>
+        </div>
+    </div>
+</div>
