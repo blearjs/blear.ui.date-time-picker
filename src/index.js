@@ -8,8 +8,10 @@
 
 var selector = require('blear.core.selector');
 var modification = require('blear.core.modification');
+var event = require('blear.core.event');
 var calendar = require('blear.utils.calendar');
 var object = require('blear.utils.object');
+var time = require('blear.utils.time');
 var date = require('blear.utils.date');
 var Popover = require('blear.ui.popover');
 var ViewModel = require('blear.classes.view-model');
@@ -79,10 +81,16 @@ var DateTimePicker = Popover.extend({
      */
     select: function (d) {
         var the = this;
+        var data = the[_data];
 
-        d = date.parse(d);
-        the[_data].selected = date.id(d);
-        the.emit('selected', d);
+        time.nextTick(function () {
+            d = date.parse(d);
+            data.year = d.getFullYear();
+            data.month = d.getMonth();
+            data.selected = date.id(d);
+            the[_calendar]();
+            the.emit('select', d);
+        });
 
         return the;
     }
@@ -95,6 +103,7 @@ var _heads = DateTimePicker.sole();
 var _vm = DateTimePicker.sole();
 var _data = DateTimePicker.sole();
 var _calendar = DateTimePicker.sole();
+var _bindList = DateTimePicker.sole();
 
 pro[_initData] = function () {
     var the = this;
@@ -116,6 +125,7 @@ pro[_initData] = function () {
         minutes: now.getMinutes(),
         seconds: 0
     };
+    the[_bindList] = [];
 };
 
 
@@ -133,7 +143,7 @@ pro[_initNode] = function () {
         methods: {
             onSelect: function (item) {
                 data.selected = item.id;
-                the.emit('selected', new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
+                the.emit('select', new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
             },
             onPrev: function () {
                 if (data.month === 0) {
