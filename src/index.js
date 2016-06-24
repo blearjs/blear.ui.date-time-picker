@@ -136,6 +136,7 @@ var DateTimePicker = Popover.extend({
     changeMinDate: function (dt) {
         var the = this;
         the[_data].minId = calendar.wrap(dt).id;
+        the[_calendar]();
         return the;
     },
 
@@ -148,9 +149,17 @@ var DateTimePicker = Popover.extend({
     changeMaxDate: function (dt) {
         var the = this;
         the[_data].maxId = calendar.wrap(dt).id;
+        the[_calendar]();
         return the;
     },
 
+
+    /**
+     * 打开
+     * @param target
+     * @param callback
+     * @returns {DateTimePicker}
+     */
     open: function (target, callback) {
         var the = this;
         time.nextTick(function () {
