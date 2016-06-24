@@ -34,15 +34,15 @@
         blearui-dateTimePicker-footer_1: !options.minutesable
     ">
         <div class="blearui-dateTimePicker-footer-item">
-            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="hours"></div>
+            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="hours" maxlength="2"></div>
             <div class="blearui-dateTimePicker-footer-label">时</div>
         </div>
         <div class="blearui-dateTimePicker-footer-item" @if="options.minutesable">
-            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="minutes"></div>
+            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="minutes" maxlength="2"></div>
             <div class="blearui-dateTimePicker-footer-label">分</div>
         </div>
         <div class="blearui-dateTimePicker-footer-item" @if="options.minutesable && options.secondsable">
-            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="seconds"></div>
+            <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="seconds" maxlength="2"></div>
             <div class="blearui-dateTimePicker-footer-label">秒</div>
         </div>
     </div>

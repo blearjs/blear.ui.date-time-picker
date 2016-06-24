@@ -81,15 +81,10 @@ var DateTimePicker = Popover.extend({
      */
     select: function (d) {
         var the = this;
-        var data = the[_data];
 
         time.nextTick(function () {
-            d = date.parse(d);
-            data.year = d.getFullYear();
-            data.month = d.getMonth();
-            data.selected = date.id(d);
+            the[_select](d);
             the[_calendar]();
-            the.emit('select', d);
         });
 
         return the;
@@ -104,6 +99,7 @@ var _vm = DateTimePicker.sole();
 var _data = DateTimePicker.sole();
 var _calendar = DateTimePicker.sole();
 var _bindList = DateTimePicker.sole();
+var _select = DateTimePicker.sole();
 
 pro[_initData] = function () {
     var the = this;
@@ -121,6 +117,7 @@ pro[_initData] = function () {
         selected: 0,
         year: year,
         month: month,
+        date: now.getDate(),
         hours: now.getHours(),
         minutes: now.getMinutes(),
         seconds: 0
@@ -142,9 +139,10 @@ pro[_initNode] = function () {
         template: template,
         methods: {
             onSelect: function (item) {
-                data.selected = item.id;
-                the.emit('select', new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
+                the[_select](new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
+                the[_calendar]();
             },
+
             onPrev: function () {
                 if (data.month === 0) {
                     data.month = 11;
@@ -181,6 +179,23 @@ pro[_calendar] = function () {
         firstDayInWeek: options.firstDayInWeek,
         weeks: 6
     });
+};
+
+// 选择
+pro[_select] = function (item) {
+    var the = this;
+    var data = the[_data];
+    var dt = date.parse(item);
+
+    data.year = dt.getFullYear();
+    data.month = dt.getMonth();
+    data.date = dt.getDate();
+    data.hours = dt.getHours();
+    data.minutes = dt.getMinutes();
+    data.seconds = dt.getSeconds();
+    data.selected = calendar.wrap(dt).id;
+
+    the.emit('select', dt);
 };
 
 

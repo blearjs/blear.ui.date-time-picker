@@ -24,8 +24,8 @@ demo1El.onclick = function () {
 };
 
 dtp.open(demo1El);
-dtp.select(new Date(2016, 11, 29));
+dtp.select(new Date(2016, 11, 29, 11, 11, 11));
 
 dtp.on('select', function (d) {
-    console.log(d.getTime());
+    console.log(d);
 });
