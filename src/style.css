@@ -44,18 +44,24 @@
     border: 0; }
   .blearui-dateTimePicker-container th {
     height: 40px;
-    border-bottom: 1px solid #eee; }
+    border-bottom: 1px solid #eee;
+    padding: 0; }
   .blearui-dateTimePicker-container td {
     vertical-align: middle;
-    border: 0; }
+    border: 0;
+    padding: 0; }
   .blearui-dateTimePicker-td {
     border: 1px solid #fff;
     color: #333;
     text-align: center;
     line-height: 40px; }
     .blearui-dateTimePicker-td_prevMonth,
-    .blearui-dateTimePicker-td_nextMonth {
+    .blearui-dateTimePicker-td_nextMonth,
+    .blearui-dateTimePicker-td_disabled {
       color: #ccc; }
+    .blearui-dateTimePicker-td_disabled {
+      border-color: #eee;
+      background: #eee; }
     .blearui-dateTimePicker-td_selected {
       background: #f2fefb;
       border-color: #00c0a5;

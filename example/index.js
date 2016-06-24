@@ -16,7 +16,8 @@ var demo1El = document.getElementById('demo1');
 var dtp = window.dtp = new DateTimePicker({
     timeable: true,
     minutesable: true,
-    secondsable: false
+    secondsable: false,
+    minDate: new Date(2016, 5, 1)
 });
 
 demo1El.onclick = function () {
@@ -24,7 +25,7 @@ demo1El.onclick = function () {
 };
 
 dtp.open(demo1El);
-dtp.select(new Date(2016, 11, 29, 11, 11, 11));
+// dtp.select(new Date(2016, 11, 29, 11, 11, 11));
 
 dtp.on('select', function (d) {
     console.log(d);

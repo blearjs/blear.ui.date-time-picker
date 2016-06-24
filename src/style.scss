@@ -74,11 +74,13 @@
     th {
       height: 40px;
       border-bottom: 1px solid #eee;
+      padding: 0;
     }
 
     td {
       vertical-align: middle;
       border: 0;
+      padding: 0;
     }
   }
 
@@ -89,8 +91,14 @@
     line-height: 40px;
 
     &_prevMonth,
-    &_nextMonth {
+    &_nextMonth,
+    &_disabled {
       color: #ccc;
+    }
+
+    &_disabled {
+      border-color: #eee;
+      background: #eee;
     }
 
     &_selected {

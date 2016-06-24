@@ -13,6 +13,7 @@ var calendar = require('blear.utils.calendar');
 var object = require('blear.utils.object');
 var time = require('blear.utils.time');
 var date = require('blear.utils.date');
+var access = require('blear.utils.access');
 var Popover = require('blear.ui.popover');
 var ViewModel = require('blear.classes.view-model');
 
@@ -20,23 +21,17 @@ var template = require('./template.html');
 
 var weeks = '日一二三四五六';
 var defaults = {
-    // /**
-    //  * 日期格式
-    //  * @type String
-    //  */
-    // dateFormat: 'YYYY-MM-DD HH:mm:ss',
-    //
-    // /**
-    //  * 最小日期
-    //  * @type Number|Date
-    //  */
-    // minDate: 0,
-    //
-    // /**
-    //  * 最大日期
-    //  * @type Number|Date
-    //  */
-    // maxDate: 0,
+    /**
+     * 最小日期
+     * @type Number|Date
+     */
+    minDate: 0,
+
+    /**
+     * 最大日期
+     * @type Number|Date
+     */
+    maxDate: 0,
 
     /**
      * 一周的第一天星期几，默认为0，即星期日
@@ -60,7 +55,12 @@ var defaults = {
      * 是否可操作秒
      * @type Boolean
      */
-    secondsable: false
+    secondsable: false,
+
+    /**
+     * 是否自动关闭
+     */
+    autoClose: true
 };
 var DateTimePicker = Popover.extend({
     className: 'DateTimePicker',
@@ -71,6 +71,7 @@ var DateTimePicker = Popover.extend({
         DateTimePicker.parent(the, options);
         the[_initData]();
         the[_initNode]();
+        the[_initEvent]();
     },
 
 
@@ -88,12 +89,81 @@ var DateTimePicker = Popover.extend({
         });
 
         return the;
+    },
+
+
+    /**
+     * 切换视图
+     * @param year
+     * @param month
+     * @returns {DateTimePicker}
+     */
+    changeView: function (year, month) {
+        var the = this;
+        var args = access.args(arguments);
+        var dt;
+        var data = the[_data];
+
+        switch (args.length) {
+            // 当前
+            case 0:
+                dt = new Date();
+                break;
+
+            // 日期
+            case 1:
+                dt = date.parse(year);
+                break;
+
+            // 年，月
+            case 2:
+                dt = new Date(year, month, 1);
+                break;
+        }
+
+        data.year = dt.getFullYear();
+        data.month = dt.getMonth();
+        the[_calendar]();
+        return the;
+    },
+
+
+    /**
+     * 改变最小日期
+     * @param dt
+     * @returns {DateTimePicker}
+     */
+    changeMinDate: function (dt) {
+        var the = this;
+        the[_data].minId = calendar.wrap(dt).id;
+        return the;
+    },
+
+
+    /**
+     * 改变最大日期
+     * @param dt
+     * @returns {DateTimePicker}
+     */
+    changeMaxDate: function (dt) {
+        var the = this;
+        the[_data].maxId = calendar.wrap(dt).id;
+        return the;
+    },
+
+    open: function (target, callback) {
+        var the = this;
+        time.nextTick(function () {
+            DateTimePicker.parent.open(the, target, callback)
+        });
+        return the;
     }
 });
 var pro = DateTimePicker.prototype;
 var _options = DateTimePicker.sole();
 var _initData = DateTimePicker.sole();
 var _initNode = DateTimePicker.sole();
+var _initEvent = DateTimePicker.sole();
 var _heads = DateTimePicker.sole();
 var _vm = DateTimePicker.sole();
 var _data = DateTimePicker.sole();
@@ -120,7 +190,9 @@ pro[_initData] = function () {
         date: now.getDate(),
         hours: now.getHours(),
         minutes: now.getMinutes(),
-        seconds: 0
+        seconds: 0,
+        minId: options.minDate ? calendar.wrap(options.minDate).id : 0,
+        maxId: calendar.wrap(options.maxDate ? options.maxDate : new Date(3000, 0)).id
     };
     the[_bindList] = [];
 };
@@ -139,8 +211,15 @@ pro[_initNode] = function () {
         template: template,
         methods: {
             onSelect: function (item) {
+                if (item.disabled) {
+                    return;
+                }
+
                 the[_select](new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
                 the[_calendar]();
+                setTimeout(function () {
+                    the.close();
+                }, 234);
             },
 
             onPrev: function () {
@@ -169,6 +248,20 @@ pro[_initNode] = function () {
 };
 
 
+pro[_initEvent] = function () {
+    var the = this;
+
+    event.on(document, 'click', function (ev) {
+        var closestPopoverEl = selector.closest(ev.target, the.getPopoverEl());
+
+        if (!closestPopoverEl.length) {
+            if (the.isVisible()) {
+                the.close();
+            }
+        }
+    });
+};
+
 // 日历
 pro[_calendar] = function () {
     var the = this;
@@ -177,7 +270,10 @@ pro[_calendar] = function () {
 
     data.weeks = calendar.month(data.year, data.month, {
         firstDayInWeek: options.firstDayInWeek,
-        weeks: 6
+        weeks: 6,
+        filter: function (item) {
+            item.disabled = item.id < data.minId || item.id > data.maxId
+        }
     });
 };
 

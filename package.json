@@ -1,6 +1,6 @@
 {
   "name": "blear.ui.date-time-picker",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "日期选择器 UI",
   "scripts": {
     "live": "browser-sync start --config bs-config.js"
@@ -36,6 +36,7 @@
   "dependencies": {},
   "peerDependencies": {
     "blear.utils.calendar": "1.x",
+    "blear.utils.access": "1.x",
     "blear.utils.object": "1.x",
     "blear.ui.popover": "1.x",
     "blear.classes.view-model": "1.x"
