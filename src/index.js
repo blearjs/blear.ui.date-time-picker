@@ -259,13 +259,19 @@ pro[_initNode] = function () {
 
 pro[_initEvent] = function () {
     var the = this;
+    var data = the[_data];
 
     event.on(document, 'click', function (ev) {
+        if (!the[_options].autoClose) {
+            return;
+        }
+
         var closestPopoverEl = selector.closest(ev.target, the.getPopoverEl());
 
         if (!closestPopoverEl.length) {
             if (the.isVisible()) {
                 the.close();
+                the[_select](new Date(data.year, data.month, data.date, data.hours, data.minutes, data.seconds));
             }
         }
     });

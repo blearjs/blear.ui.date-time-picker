@@ -1,6 +1,6 @@
 {
   "name": "blear.ui.date-time-picker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "日期选择器 UI",
   "scripts": {
     "live": "browser-sync start --config bs-config.js"
