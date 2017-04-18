@@ -7,33 +7,13 @@
         </div>
     </div>
 
-    <div class="blearui-dateTimePicker-container">
-        <table>
-            <thead>
-            <tr>
-                <th @for="head in heads">{{head}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr @for="week in weeks">
-                <td @for="item in week">
-                    <div class="blearui-dateTimePicker-td" @class="
-                    blearui-dateTimePicker-td_prevMonth: item.prevMonth,
-                    blearui-dateTimePicker-td_nextMonth: item.nextMonth,
-                    blearui-dateTimePicker-td_disabled: item.disabled,
-                    blearui-dateTimePicker-td_selected: item.id == selected
-                    " @click="onSelect(item)">{{item.date}}</div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <div class="blearui-dateTimePicker-container" @html="calendarHTML"></div>
 
-    <div class="blearui-dateTimePicker-footer" @if="options.timeable" @class="
+    <div class="blearui-dateTimePicker-footer" @if="options.timeable" :class="{
         blearui-dateTimePicker-footer_3: options.minutesable && options.secondsable,
         blearui-dateTimePicker-footer_2: options.minutesable && !options.secondsable,
         blearui-dateTimePicker-footer_1: !options.minutesable
-    ">
+    }">
         <div class="blearui-dateTimePicker-footer-item">
             <div class="blearui-dateTimePicker-footer-ipt"><input type="text" @model="hours" maxlength="2"></div>
             <div class="blearui-dateTimePicker-footer-label">时</div>

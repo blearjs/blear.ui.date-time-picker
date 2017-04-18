@@ -7,17 +7,21 @@
 
 
 var selector = require('blear.core.selector');
-var modification = require('blear.core.modification');
+var attribute = require('blear.core.attribute');
 var event = require('blear.core.event');
 var calendar = require('blear.utils.calendar');
 var object = require('blear.utils.object');
+var fun = require('blear.utils.function');
 var time = require('blear.utils.time');
 var date = require('blear.utils.date');
 var access = require('blear.utils.access');
+var json = require('blear.utils.json');
 var Popover = require('blear.ui.popover');
-var ViewModel = require('blear.classes.view-model');
+var MVVM = require('blear.classes.mvvm');
+var Template = require('blear.classes.template');
 
 var template = require('./template.html');
+var calendarTpl = new Template(require('./calendar.html'));
 
 var weeks = '日一二三四五六';
 var defaults = {
@@ -85,7 +89,7 @@ var DateTimePicker = Popover.extend({
 
         time.nextTick(function () {
             the[_select](d);
-            the[_calendar]();
+            the[_renderCalendar]();
         });
 
         return the;
@@ -123,7 +127,7 @@ var DateTimePicker = Popover.extend({
 
         data.year = dt.getFullYear();
         data.month = dt.getMonth();
-        the[_calendar]();
+        the[_renderCalendar]();
         return the;
     },
 
@@ -135,8 +139,8 @@ var DateTimePicker = Popover.extend({
      */
     changeMinDate: function (dt) {
         var the = this;
-        the[_data].minId = calendar.wrap(dt).id;
-        the[_calendar]();
+        the[_data].minId = date.id(dt);
+        the[_renderCalendar]();
         return the;
     },
 
@@ -148,8 +152,8 @@ var DateTimePicker = Popover.extend({
      */
     changeMaxDate: function (dt) {
         var the = this;
-        the[_data].maxId = calendar.wrap(dt).id;
-        the[_calendar]();
+        the[_data].maxId = date.id(dt);
+        the[_renderCalendar]();
         return the;
     },
 
@@ -162,9 +166,9 @@ var DateTimePicker = Popover.extend({
      */
     open: function (target, callback) {
         var the = this;
-        time.nextTick(function () {
-            DateTimePicker.parent.open(the, target, callback)
-        });
+        callback = fun.ensure(callback);
+        the[_currentTarget] = target;
+        DateTimePicker.invoke('open', the, target, callback);
         return the;
     }
 });
@@ -176,9 +180,11 @@ var _initEvent = DateTimePicker.sole();
 var _heads = DateTimePicker.sole();
 var _vm = DateTimePicker.sole();
 var _data = DateTimePicker.sole();
-var _calendar = DateTimePicker.sole();
+var _renderCalendar = DateTimePicker.sole();
+var _calendarData = DateTimePicker.sole();
 var _bindList = DateTimePicker.sole();
 var _select = DateTimePicker.sole();
+var _currentTarget = DateTimePicker.sole();
 
 pro[_initData] = function () {
     var the = this;
@@ -191,17 +197,21 @@ pro[_initData] = function () {
     the[_heads] = the[_heads].split('');
     the[_data] = {
         options: the[_options],
-        heads: the[_heads],
-        weeks: [],
-        selected: 0,
         year: year,
         month: month,
         date: now.getDate(),
         hours: now.getHours(),
         minutes: now.getMinutes(),
         seconds: 0,
-        minId: options.minDate ? calendar.wrap(options.minDate).id : 0,
-        maxId: calendar.wrap(options.maxDate ? options.maxDate : new Date(3000, 0)).id
+        minId: options.minDate ? date.id(options.minDate) : 0,
+        maxId: date.id(options.maxDate ? options.maxDate : new Date(3000, 0)),
+        calendarHTML: ''
+    };
+    the[_calendarData] = {
+        selected: 0,
+        options: the[_options],
+        heads: the[_heads],
+        weeks: []
     };
     the[_bindList] = [];
 };
@@ -209,28 +219,14 @@ pro[_initData] = function () {
 
 pro[_initNode] = function () {
     var the = this;
-    var divEl = modification.create('div');
     var data = the[_data];
 
-    the.setHTML(divEl);
-    the[_calendar]();
-    the[_vm] = new ViewModel({
-        el: divEl,
+    the.setHTML(template);
+    the[_renderCalendar]();
+    the[_vm] = new MVVM({
+        el: the.getContentEl(),
         data: data,
-        template: template,
         methods: {
-            onSelect: function (item) {
-                if (item.disabled) {
-                    return;
-                }
-
-                the[_select](new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
-                the[_calendar]();
-                setTimeout(function () {
-                    the.close();
-                }, 234);
-            },
-
             onPrev: function () {
                 if (data.month === 0) {
                     data.month = 11;
@@ -239,7 +235,7 @@ pro[_initNode] = function () {
                     data.month--;
                 }
 
-                the[_calendar]();
+                the[_renderCalendar]();
             },
 
             onNext: function () {
@@ -250,7 +246,7 @@ pro[_initNode] = function () {
                     data.month++;
                 }
 
-                the[_calendar]();
+                the[_renderCalendar]();
             }
         }
     });
@@ -266,6 +262,15 @@ pro[_initEvent] = function () {
             return;
         }
 
+        // 点击的是当前目标
+        if (the[_currentTarget]) {
+            var closesetTargetEl = selector.query(ev.target, the[_currentTarget]);
+
+            if (closesetTargetEl.length) {
+                return;
+            }
+        }
+
         var closestPopoverEl = selector.closest(ev.target, the.getPopoverEl());
 
         if (!closestPopoverEl.length) {
@@ -275,21 +280,43 @@ pro[_initEvent] = function () {
             }
         }
     });
+
+    event.on(the.getContentEl(), 'click', 'td', function () {
+        var jsonEl = selector.children(this)[1];
+        var item = json.parse(attribute.text(jsonEl));
+
+        if (item.disabled) {
+            return;
+        }
+
+        the[_select](new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
+        the[_renderCalendar]();
+        setTimeout(function () {
+            the.close();
+        }, 234);
+    });
+
+    the[_currentTarget] = null;
+
+    the.on('afterClose', function () {
+        the[_currentTarget] = null;
+    });
 };
 
 // 日历
-pro[_calendar] = function () {
+pro[_renderCalendar] = function () {
     var the = this;
     var data = the[_data];
     var options = the[_options];
 
-    data.weeks = calendar.month(data.year, data.month, {
+    the[_calendarData].weeks = calendar.month(data.year, data.month, {
         firstDayInWeek: options.firstDayInWeek,
         weeks: 6,
-        filter: function (item) {
+        iterator: function (item) {
             item.disabled = item.id < data.minId || item.id > data.maxId
         }
     });
+    the[_data].calendarHTML = calendarTpl.render(the[_calendarData]);
 };
 
 // 选择
@@ -304,7 +331,7 @@ pro[_select] = function (item) {
     data.hours = dt.getHours();
     data.minutes = dt.getMinutes();
     data.seconds = dt.getSeconds();
-    data.selected = calendar.wrap(dt).id;
+    the[_calendarData].selected = date.id(dt);
 
     the.emit('select', dt);
 };

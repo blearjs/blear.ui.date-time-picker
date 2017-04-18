@@ -1,0 +1,21 @@
+<table>
+    <thead>
+    <tr>
+        <th @for="head in heads">{{head}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr @for="week in weeks">
+        <td @for="item in week">
+            <div class="blearui-dateTimePicker-td" :class="{
+                        blearui-dateTimePicker-td_prevMonth: item.prevMonth,
+                        blearui-dateTimePicker-td_nextMonth: item.nextMonth,
+                        blearui-dateTimePicker-td_today: item.today,
+                        blearui-dateTimePicker-td_disabled: item.disabled,
+                        blearui-dateTimePicker-td_selected: item.id == selected
+                    }">{{item.date}}</div>
+            <script type="text/json">{{=JSON.stringify(item)}}</script>
+        </td>
+    </tr>
+    </tbody>
+</table>

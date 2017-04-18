@@ -9,16 +9,12 @@
       text-align: center;
       margin: 0 auto;
       overflow: hidden; }
-    .blearui-dateTimePicker-nav-left,
-    .blearui-dateTimePicker-nav-right {
+    .blearui-dateTimePicker-nav-left, .blearui-dateTimePicker-nav-right {
       position: relative;
       width: 20px;
       height: 20px;
       top: 10px; }
-      .blearui-dateTimePicker-nav-left:before,
-      .blearui-dateTimePicker-nav-left:after,
-      .blearui-dateTimePicker-nav-right:before,
-      .blearui-dateTimePicker-nav-right:after {
+      .blearui-dateTimePicker-nav-left:before, .blearui-dateTimePicker-nav-left:after, .blearui-dateTimePicker-nav-right:before, .blearui-dateTimePicker-nav-right:after {
         display: block;
         position: absolute;
         content: "";
@@ -55,10 +51,11 @@
     color: #333;
     text-align: center;
     line-height: 40px; }
-    .blearui-dateTimePicker-td_prevMonth,
-    .blearui-dateTimePicker-td_nextMonth,
-    .blearui-dateTimePicker-td_disabled {
+    .blearui-dateTimePicker-td_prevMonth, .blearui-dateTimePicker-td_nextMonth, .blearui-dateTimePicker-td_disabled {
       color: #ccc; }
+    .blearui-dateTimePicker-td_today {
+      font-weight: 900;
+      color: #00c0a5; }
     .blearui-dateTimePicker-td_disabled {
       border-color: #eee;
       background: #eee; }
