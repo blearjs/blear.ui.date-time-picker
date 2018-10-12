@@ -29,4 +29,5 @@ dtp.open(demo1El);
 
 dtp.on('select', function (d) {
     console.log(d);
+    demo1El.value = d.toLocaleString();
 });

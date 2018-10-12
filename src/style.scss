@@ -17,13 +17,19 @@
     }
 
     $nav-arrow-size: 10px;
+    $hover-background: #f5f5f5;
 
     &-left,
     &-right {
       position: relative;
-      width: $nav-arrow-size * 2;
-      height: $nav-arrow-size * 2;
-      top: ($nav-size - $nav-arrow-size * 2) / 2;
+      width: 30px;
+      height: 30px;
+      top: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background: $hover-background;
+      }
 
       &:before,
       &:after {
@@ -31,6 +37,8 @@
         position: absolute;
         content: "";
         border: $nav-arrow-size solid transparent;
+        top: 50%;
+        margin-top: -$nav-arrow-size;
       }
     }
 
@@ -39,16 +47,22 @@
 
       &:before {
         border-right-color: #444;
+        left: 0;
       }
 
       &:after {
         border-right-color: #fff;
         margin-left: 1px;
+        left: 0;
+      }
+
+      &:hover:after {
+        border-right-color: $hover-background;
       }
     }
 
     &-center {
-
+      color: #222;
     }
 
     &-right {
@@ -56,11 +70,17 @@
 
       &:before {
         border-left-color: #444;
+        left: 10px;
       }
 
       &:after {
         border-left-color: #fff;
         margin-left: -1px;
+        left: 10px;
+      }
+
+      &:hover:after {
+        border-left-color: $hover-background;
       }
     }
   }
@@ -91,6 +111,12 @@
     color: #333;
     text-align: center;
     line-height: 40px;
+    cursor: pointer;
+
+    &:hover {
+      background: $primary-background;
+      border-color: $primary-background;
+    }
 
     &_prevMonth,
     &_nextMonth,
@@ -109,9 +135,12 @@
     }
 
     &_selected {
-      background: $primary-background;
-      border-color: $primary-color;
-      color: $primary-color;
+      &,
+      &:hover {
+        background: $primary-background;
+        border-color: $primary-color;
+        color: $primary-color;
+      }
     }
   }
 
@@ -157,6 +186,7 @@
       padding: 0 4px;
       text-align: center;
       border-radius: 4px;
+      font-size: 14px;
     }
   }
 }
