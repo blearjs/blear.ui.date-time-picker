@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "blear.classes.mvvm": "^1.0.9",
-    "blear.classes.template": "^1.1.0",
+    "blear.classes.template": "^2.1.2",
     "blear.core.attribute": "^1.0.11",
     "blear.ui.popover": "^1.1.1",
     "blear.utils.access": "1.x",
@@ -45,7 +45,7 @@
   },
   "peerDependencies": {},
   "devDependencies": {
-    "coolie.js": "^2.0.18"
+    "coolie.js": "^2.4.1"
   },
   "license": "MIT"
 }
