@@ -55,14 +55,14 @@
       color: #ccc; }
     .blearui-dateTimePicker-td_today {
       font-weight: 900;
-      color: #00c0a5; }
+      color: #1890ff; }
     .blearui-dateTimePicker-td_disabled {
       border-color: #eee;
       background: #eee; }
     .blearui-dateTimePicker-td_selected {
-      background: #f2fefb;
-      border-color: #00c0a5;
-      color: #00c0a5; }
+      background: #e4f2ff;
+      border-color: #1890ff;
+      color: #1890ff; }
   .blearui-dateTimePicker-footer {
     overflow: hidden;
     padding: 15px;

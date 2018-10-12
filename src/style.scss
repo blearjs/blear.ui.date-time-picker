@@ -1,4 +1,6 @@
 .blearui-dateTimePicker {
+  $primary-color: #1890ff;
+  $primary-background: lighten($primary-color, 40%);
   width: 420px;
   font-size: 14px;
 
@@ -98,7 +100,7 @@
 
     &_today {
       font-weight: 900;
-      color: #00c0a5;
+      color: $primary-color;
     }
 
     &_disabled {
@@ -107,9 +109,9 @@
     }
 
     &_selected {
-      background: #f2fefb;
-      border-color: #00c0a5;
-      color: #00c0a5;
+      background: $primary-background;
+      border-color: $primary-color;
+      color: $primary-color;
     }
   }
 
