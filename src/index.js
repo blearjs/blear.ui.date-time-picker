@@ -9,6 +9,7 @@
 var selector = require('blear.core.selector');
 var attribute = require('blear.core.attribute');
 var event = require('blear.core.event');
+var modification = require('blear.core.modification');
 var calendar = require('blear.utils.calendar');
 var object = require('blear.utils.object');
 var fun = require('blear.utils.function');
@@ -71,7 +72,7 @@ var DateTimePicker = Popover.extend({
     constructor: function (options) {
         var the = this;
 
-        the[_options] = object.assign({}, defaults, options);
+        options = the[_options] = object.assign({}, defaults, options);
         DateTimePicker.parent(the, options);
         the[_initData]();
         the[_initNode]();
@@ -173,18 +174,19 @@ var DateTimePicker = Popover.extend({
     }
 });
 var pro = DateTimePicker.prototype;
-var _options = DateTimePicker.sole();
-var _initData = DateTimePicker.sole();
-var _initNode = DateTimePicker.sole();
-var _initEvent = DateTimePicker.sole();
-var _heads = DateTimePicker.sole();
-var _vm = DateTimePicker.sole();
-var _data = DateTimePicker.sole();
-var _renderCalendar = DateTimePicker.sole();
-var _calendarData = DateTimePicker.sole();
-var _bindList = DateTimePicker.sole();
-var _select = DateTimePicker.sole();
-var _currentTarget = DateTimePicker.sole();
+var sole = DateTimePicker.sole;
+var _options = sole();
+var _initData = sole();
+var _initNode = sole();
+var _initEvent = sole();
+var _heads = sole();
+var _vm = sole();
+var _data = sole();
+var _renderCalendar = sole();
+var _calendarData = sole();
+var _bindList = sole();
+var _select = sole();
+var _currentTarget = sole();
 
 pro[_initData] = function () {
     var the = this;
@@ -200,9 +202,9 @@ pro[_initData] = function () {
         year: year,
         month: month,
         date: now.getDate(),
-        hours: now.getHours(),
-        minutes: now.getMinutes(),
-        seconds: 0,
+        hour: now.getHours(),
+        minute: now.getMinutes(),
+        second: 0,
         minId: options.minDate ? date.id(options.minDate) : 0,
         maxId: date.id(options.maxDate ? options.maxDate : new Date(3000, 0)),
         calendarHTML: ''
@@ -220,12 +222,14 @@ pro[_initData] = function () {
 pro[_initNode] = function () {
     var the = this;
     var data = the[_data];
+    var el = modification.create('div');
 
-    the.setHTML(template);
+    modification.insert(el, the.getContentEl());
     the[_renderCalendar]();
     the[_vm] = new MVVM({
-        el: the.getContentEl(),
+        el: el,
         data: data,
+        template: template,
         methods: {
             onPrev: function () {
                 if (data.month === 0) {
@@ -276,7 +280,6 @@ pro[_initEvent] = function () {
         if (!closestPopoverEl.length) {
             if (the.isVisible()) {
                 the.close();
-                the[_select](new Date(data.year, data.month, data.date, data.hours, data.minutes, data.seconds));
             }
         }
     });
@@ -289,7 +292,7 @@ pro[_initEvent] = function () {
             return;
         }
 
-        the[_select](new Date(item.year, item.month, item.date, data.hours, data.minutes, data.seconds));
+        the[_select](new Date(item.year, item.month, item.date, data.hour, data.minute, data.second));
         the[_renderCalendar]();
         setTimeout(function () {
             the.close();
@@ -328,9 +331,9 @@ pro[_select] = function (item) {
     data.year = dt.getFullYear();
     data.month = dt.getMonth();
     data.date = dt.getDate();
-    data.hours = dt.getHours();
-    data.minutes = dt.getMinutes();
-    data.seconds = dt.getSeconds();
+    data.hour = dt.getHours();
+    data.minute = dt.getMinutes();
+    data.second = dt.getSeconds();
     the[_calendarData].selected = date.id(dt);
 
     the.emit('select', dt);
